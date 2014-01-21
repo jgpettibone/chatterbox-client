@@ -1,3 +1,5 @@
+var friends = {};
+var currentRoom = "lobby";
 
 var retrieveRoomName = function() {
 
@@ -17,13 +19,29 @@ var retrieveRoomName = function() {
 
 
 var getMessages = function() {
-  var roomname = retrieveRoomName();
+  // var roomname = retrieveRoomName();
+  var roomname = currentRoom;
 
-  // console.log(roomname);
+  // console.log('from', getFriends());
 
   var getRoomName = function() {
     return roomname;
   };
+
+  var findFriends = function() {
+    var fri = [];
+    $.each($('.friend'), function() {
+      fri.push($(this).text());
+    });
+    fri = _.uniq(fri);
+    console.log('fri array ', fri)
+  }
+  findFriends();
+
+
+  // var getFriends = function() {
+  //   return friends;
+  // }
   $.ajax({
     url: 'https://api.parse.com/1/classes/chatterbox',
   	type: 'GET',
@@ -32,9 +50,14 @@ var getMessages = function() {
       $('.message').remove();
       _.each(data.results, function(item, index) {
         if (item["roomname"] === getRoomName()) {
+          // console.log('friends within getMessages ', getFriends());
           // console.log('we are in room ', item["roomname"]);
           var $message = $("<div class='message'></div>");
-          $message.append($('<div></div>').text(item["username"]));
+          if (item["username"] in getFriends()) {
+            $message.append($("<a href='#' class='username friend'></a>").text(item["username"]));
+          } else {
+            $message.append($("<a href='#' class='username'></a>").text(item["username"]));            
+          }
           $message.append($('<div></div>').text(item["text"]));
           $('#messages').append($message);
         }
@@ -49,7 +72,8 @@ var getMessages = function() {
 
 var sendMessages = function(roomname) {
 
-  var roomname = retrieveRoomName();
+  // var roomname = retrieveRoomName();
+  var roomname = currentRoom;
 
   var getRoomName = function() {
     return roomname;
@@ -79,12 +103,11 @@ var sendMessages = function(roomname) {
 
 var getRoomList = function() {
 
-  var roomname = retrieveRoomName();
-
+  // var roomname = retrieveRoomName();
+  var roomname = currentRoom;
     var getRoomName = function() {
     return roomname;
   };
-
 
   $.ajax({
     url: 'https://api.parse.com/1/classes/chatterbox',
@@ -100,8 +123,19 @@ var getRoomList = function() {
         $link = $("<a href='#' class='room'></a>").text(key);
         $("#rooms").append($link);
       }
-      $link = $("<a href='#' class='room'></a>").text(getRoomName());
-      $("#rooms").append($link);
+
+      // console.log($("<a href='#' class='room'></a>"));
+
+      var re = RegExp(getRoomName());
+      if (re.test($(".room").text())) {
+        console.log('already in the list');
+      } else {
+        $link = $("<a href='#' class='room'></a>").text(getRoomName());
+        $("#rooms").append($link);        
+      }
+
+      // $link = $("<a href='#' class='room'></a>").text(getRoomName());
+      // $("#rooms").append($link);
 
     },
     error: function(data) {
@@ -120,25 +154,39 @@ var createRoom = function() {
 
   getMessages(newRoom);
 
-  console.log('trying to append ', newRoom);
-  $link = $("<a href='#' class='room'></a>").text(newRoom);
-  $("#rooms").prepend($link);
-  console.log('finishing');
+  // console.log('trying to append ', newRoom);
+  // $link = $("<a href='#' class='room'></a>").text(newRoom);
+  // $("#rooms").prepend($link);
+  // console.log('finishing');
 };
 
 var setRoomName = function(roomname) {
 
-  console.log('in setRoomName');
-  var re = RegExp("room-");
-  var thisLocation = window.location.search;
+  currentRoom = roomname;
+  // console.log('in setRoomName');
+  // var re = RegExp("room-");
+  // var thisLocation = window.location.search;
 
-  if (re.test(thisLocation)) {
-    var index = window.location.search.lastIndexOf('-');
-    thisLocation = window.location.search.slice(0,index-4);    
-  }
-  var newSearch = thisLocation + 'room-' + roomname;
-  window.location.search = newSearch;
+  // if (re.test(thisLocation)) {
+  //   var index = window.location.search.lastIndexOf('-');
+  //   thisLocation = window.location.search.slice(0,index-4);    
+  // }
+  // var newSearch = thisLocation + 'room-' + roomname;
+  // window.location.search = newSearch;
 
+};
+
+
+var makeFriends = function(username, friends) {
+  console.log('i am making a friend');
+  username.addClass('friend');
+  friends[username.text()] = true;
+  console.log(friends);
+};
+
+var getFriends = function() {
+  // console.log('in getFriends ', friends);
+  return friends;
 };
 
 $(document).ready(function() {
@@ -153,11 +201,17 @@ $(document).ready(function() {
   });
   $('#rooms').on('click', 'a', function(e) {
     e.preventDefault();
-    console.log($(this).text());
-    getMessages($(this).text());
+    // console.log($(this).text());
+    console.log('in the room click', friends);
     setRoomName($(this).text());
+    getMessages($(this).text());
   });
   $('.createRoom').on('click', function() {
     createRoom();
   });
+  $('#messages').on('click', 'a', function(e) {
+    e.preventDefault();
+    makeFriends($(this), friends);
+    // console.log(friends);
+  })
 });
