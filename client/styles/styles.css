@@ -40,3 +40,7 @@ body {
 .message {
   margin-bottom: 10px;
 }
+.room {
+    display: block;
+    overflow: hidden;
+}
