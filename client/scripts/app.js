@@ -1,7 +1,26 @@
 
+var retrieveRoomName = function() {
 
-var getMessages = function(roomname) {
-  var roomname = roomname || "lobby";
+  var re = RegExp("room-");
+  var thisLocation = window.location.search;
+
+  if (re.test(thisLocation)) {
+    var index = window.location.search.lastIndexOf('-');
+    roomname = window.location.search.slice(index+1);    
+  }
+  else {
+    roomname = "lobby";
+  }
+
+  return roomname;
+};
+
+
+var getMessages = function() {
+  var roomname = retrieveRoomName();
+
+  // console.log(roomname);
+
   var getRoomName = function() {
     return roomname;
   };
@@ -20,9 +39,6 @@ var getMessages = function(roomname) {
           $('#messages').append($message);
         }
       });
-      getRoomList();
-      // $('.room').off('click');
-      // $('.room').on('click', console.log('I have been clicked')); 
 
   	},
   	error: function(data) {
@@ -32,16 +48,18 @@ var getMessages = function(roomname) {
 };
 
 var sendMessages = function(roomname) {
-  var roomname = roomname || "lobby";
-    var getRoomName = function() {
+
+  var roomname = retrieveRoomName();
+
+  var getRoomName = function() {
     return roomname;
   };
 
   var index = window.location.search.lastIndexOf("=");
   var message = {
-    'username': window.location.search.slice(index+1),
+    'username': window.location.search.slice(index+1,index+2),
     'text': $("[name=newMessage]").val(),
-    'roomname': "lobby"
+    'roomname': roomname
   };
   $.ajax({
     url: 'https://api.parse.com/1/classes/chatterbox',
@@ -51,6 +69,7 @@ var sendMessages = function(roomname) {
     success: function(data) {
       getMessages();
       $("[name=newMessage]").val("");
+      console.log(message);
     },
     error: function(data) {
       console.log('Failed to send data!');
@@ -59,6 +78,14 @@ var sendMessages = function(roomname) {
 };
 
 var getRoomList = function() {
+
+  var roomname = retrieveRoomName();
+
+    var getRoomName = function() {
+    return roomname;
+  };
+
+
   $.ajax({
     url: 'https://api.parse.com/1/classes/chatterbox',
     type: 'GET',
@@ -70,29 +97,54 @@ var getRoomList = function() {
         roomList[item["roomname"]] = 1;
       });
       for (var key in roomList) {
-        //first make the key into a link
         $link = $("<a href='#' class='room'></a>").text(key);
         $("#rooms").append($link);
-        // console.log($('.room').text());
-
-        // $("#rooms").append($("<div class='room'></div>").text(key));
       }
-      // $('.room').off('click');
-      // $('.room').on('click', console.log('I have been clicked')); 
+      $link = $("<a href='#' class='room'></a>").text(getRoomName());
+      $("#rooms").append($link);
+
     },
     error: function(data) {
       console.log('Failed to get data!');
     }
   });  
-  // $('.room').off('click');
-  // $('.room').on('click', console.log('I have been clicked')); 
 
 };
 
+var createRoom = function() {
+
+  console.log('creating room');
+  var newRoom = $("[name=newRoom]").val();
+  setRoomName(newRoom);
+  console.log('before getMessages ', newRoom);
+
+  getMessages(newRoom);
+
+  console.log('trying to append ', newRoom);
+  $link = $("<a href='#' class='room'></a>").text(newRoom);
+  $("#rooms").prepend($link);
+  console.log('finishing');
+};
+
+var setRoomName = function(roomname) {
+
+  console.log('in setRoomName');
+  var re = RegExp("room-");
+  var thisLocation = window.location.search;
+
+  if (re.test(thisLocation)) {
+    var index = window.location.search.lastIndexOf('-');
+    thisLocation = window.location.search.slice(0,index-4);    
+  }
+  var newSearch = thisLocation + 'room-' + roomname;
+  window.location.search = newSearch;
+
+};
 
 $(document).ready(function() {
   getMessages();
-  var index = window.location.search.lastIndexOf("=");
+  // setRoomName("lobby");
+  getRoomList();
   $('.getMessages').on('click', function() {
     getMessages();
   });
@@ -103,5 +155,9 @@ $(document).ready(function() {
     e.preventDefault();
     console.log($(this).text());
     getMessages($(this).text());
+    setRoomName($(this).text());
+  });
+  $('.createRoom').on('click', function() {
+    createRoom();
   });
 });
