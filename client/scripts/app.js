@@ -15,7 +15,8 @@ var getMessages = function(e) {
         // console.log(item);
         $message.append($('<div></div>').text(item["username"]));
         $message.append($('<div></div>').text(item["text"]));
-        $('#main').append($message);
+        $('#messages').append($message);
+        console.log(data);
       });
   	},
   	error: function(data) {
@@ -26,10 +27,11 @@ var getMessages = function(e) {
 
 var sendMessages = function(e) {
   // e.preventDefault();
+  var index = window.location.search.lastIndexOf("=");
   var message = {
-    'username': window.location.search.split("&")[1].slice(9),
+    'username': window.location.search.slice(index+1),
     'text': $("[name=newMessage]").val(),
-    'roomname': null
+    'roomname': "lobby"
   };
   $.ajax({
     url: 'https://api.parse.com/1/classes/chatterbox',
@@ -39,8 +41,9 @@ var sendMessages = function(e) {
     // data: 'order=-createdAt',
     success: function(data) {
       getMessages();
-      console.log(data);
-      console.log(message);
+      // console.log(data);
+      // console.log(message);
+      $("[name=newMessage]").val("");
     },
     error: function(data) {
       console.log('Failed to send data!');
@@ -48,10 +51,37 @@ var sendMessages = function(e) {
   });
 };
 
+var getRoomList = function() {
+
+  $.ajax({
+    url: 'https://api.parse.com/1/classes/chatterbox',
+    type: 'GET',
+    data: 'order=-createdAt',
+    success: function(data) {
+      var roomList = {};
+      _.each(data.results, function(item, index) {
+        roomList[item["roomname"]] = 1;
+      });
+      for (var key in roomList) {
+        $("#rooms").append($('<div></div>').text(key));
+      }
+    },
+    error: function(data) {
+      console.log('Failed to get data!');
+    }
+  });  
+
+
+
+
+};
+
 
 $(document).ready(function() {
   getMessages();
-  // console.log(window.location.search.split("&")[1].slice(9));
+  getRoomList();
+  var index = window.location.search.lastIndexOf("=");
+  console.log(window.location.search.slice(index+1));
   $('.getMessages').on('click', getMessages);
   $('.sendMessages').on('click', sendMessages);
 });
