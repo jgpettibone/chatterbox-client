@@ -41,6 +41,10 @@ body {
   margin-bottom: 10px;
 }
 .room {
-    display: block;
-    overflow: hidden;
+  display: block;
+  overflow: hidden;
 }
+.friend {
+  font-weight: bold;
+}
+
