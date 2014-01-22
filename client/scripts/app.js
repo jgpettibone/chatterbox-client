@@ -20,6 +20,7 @@ var retrieveRoomName = function() {
 
 var getMessages = function() {
   // var roomname = retrieveRoomName();
+  console.log(currentRoom);
   var roomname = currentRoom;
 
   // console.log('from', getFriends());
@@ -29,12 +30,12 @@ var getMessages = function() {
   };
 
   var findFriends = function() {
-    var fri = [];
+    var friendArray = [];
     $.each($('.friend'), function() {
-      fri.push($(this).text());
+      friendArray.push($(this).text());
     });
-    fri = _.uniq(fri);
-    console.log('fri array ', fri)
+    friendArray = _.uniq(friendArray);
+    // console.log('fri array ', fri)
   }
   findFriends();
 
@@ -61,6 +62,7 @@ var getMessages = function() {
           $message.append($('<div></div>').text(item["text"]));
           $('#messages').append($message);
         }
+        getRoomList();
       });
 
   	},
@@ -152,11 +154,12 @@ var createRoom = function() {
   setRoomName(newRoom);
   console.log('before getMessages ', newRoom);
 
-  getMessages(newRoom);
+  getMessages();
+  $("[name=newRoom]").val("");
 
   // console.log('trying to append ', newRoom);
   // $link = $("<a href='#' class='room'></a>").text(newRoom);
-  // $("#rooms").prepend($link);
+  // $("#rooms").append($link);
   // console.log('finishing');
 };
 
