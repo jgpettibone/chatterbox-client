@@ -7,37 +7,18 @@
 
     <!-- external javascript -->
     <script src="bower_components/jquery/jquery.min.js"></script>
-    <script src="bower_components/underscore/underscore.js"></script>
     
     <!-- internal javascript -->
     <script src="scripts/config.js"></script>
     <script src="scripts/app.js"></script>
   </head>
-  <body>
 
+  <body>
     <div id="main" class="group">
-      <h1>Chat-Client</h1>
+      <h1>chatterbox</h1>
 
       <button type="button" class='getMessages'>Get New Messages!</button>
-
-      <form method="get">
-        <input type="text" name="newMessage">
-        <input type="button" class="sendMessages" value="Submit New Message"><br>
-      </form>
-
-      <div id="rooms">
-        <h2>Available Rooms</h2>
-          <form method="get">
-            <input type="text" name="newRoom">
-            <input type="button" class="createRoom" value="Create a New Room"><br>
-          </form> 
-      </div>  
-      <div id="messages">
-        <h2>Chat!</h2>
-      </div>
-
+      <div id='chats'></div>
     </div>
-
-
   </body>
 </html>
