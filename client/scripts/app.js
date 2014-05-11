@@ -6,6 +6,7 @@ var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   username: 'anonymous',
   roomname: 'lobby',
+  friends: {},
 
   init: function() {
     app.username = window.location.search.substr(10);
@@ -20,12 +21,14 @@ var app = {
     $('#roomSelect').on('change', function() {
       app.changeRoom();
     });
+    $('#main').on('click', '.username', function() {
+      app.addFriend();
+    });
   },
 
   getMessages: function() {
     $.ajax({
       url: app.server,
-      type: GET,
       data: 'order=-createdAt',
       contentType: 'application/json',
       success: function(data) {
@@ -43,7 +46,7 @@ var app = {
     _.each(data.results, function(item, index) {
       if (item['roomname'] === app.roomname || app.roomname === 'lobby') {
         var $message = $('<li></li>').addClass('message');
-        var $user = $('<div></div>').addClass('user').text(item['username']);
+        var $user = $('<div></div>').addClass('username').text(item['username']);
         var $text = $('<div></div>').addClass('text').text(item['text']);
         $message.append($user).append($text);
         $('#chats').append($message);
@@ -114,6 +117,10 @@ var app = {
   addRoom: function(roomname) {
     var $roomOption = $('<option/>').val(roomname).text(roomname);
     $('#roomSelect').append($roomOption);
+  },
+
+  addFriend: function() {
+
   }
 
 };
