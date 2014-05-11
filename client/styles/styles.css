@@ -27,7 +27,7 @@ body {
     margin-top: 0;
     font-size: 35px;
 }
-#messages {
+#chats {
     width: 700px;
     float: right;
     border: 1px solid black
@@ -35,7 +35,7 @@ body {
 #rooms {
     width: 275px;
     float: left;
-    border: 1px solid blue;
+    border: 1px solid black;
 }
 .message {
   margin-bottom: 10px;
