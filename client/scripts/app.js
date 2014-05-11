@@ -10,11 +10,11 @@ var app = {
 
   init: function() {
     app.username = window.location.search.substr(10);
-    app.getMessages();
+    app.getNewMessages();
     // Event Handlers
-    $('.getMessages').on('click', function() {
-      app.getMessages();
-    });
+    // $('.getMessages').on('click', function() {
+    //   app.getMessages();
+    // });
     $('.postMessage').on('click', function() {
       app.postMessage();
     });
@@ -24,6 +24,11 @@ var app = {
     $('#main').on('click', '.username', function() {
       app.addFriend();
     });
+  },
+
+  getNewMessages: function() {
+    app.getMessages();
+    setTimeout(app.getNewMessages, 5000);
   },
 
   getMessages: function() {
