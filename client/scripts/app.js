@@ -56,7 +56,8 @@ var app = {
 
     var message = {
       username: app.username,
-      text: $('[name=newMessage').val()
+      text: $('[name=newMessage').val(),
+      roomname: app.roomname
     }
 
     $.ajax({
@@ -73,6 +74,5 @@ var app = {
       }
     });
   }
-
 
 };
