@@ -6,23 +6,17 @@ var app = {
   server: 'https://api.parse.com/1/classes/chatterbox',
   username: 'anonymous',
   roomname: 'lobby',
-  friends: {},
+  friends: [],
 
   init: function() {
     app.username = window.location.search.substr(10);
     app.getNewMessages();
     // Event Handlers
-    // $('.getMessages').on('click', function() {
-    //   app.getMessages();
-    // });
     $('.postMessage').on('click', function() {
       app.postMessage();
     });
     $('#roomSelect').on('change', function() {
       app.changeRoom();
-    });
-    $('#main').on('click', '.username', function() {
-      app.addFriend();
     });
   },
 
@@ -53,10 +47,14 @@ var app = {
         var $message = $('<li></li>').addClass('message');
         var $user = $('<div></div>').addClass('username').text(item['username']);
         var $text = $('<div></div>').addClass('text').text(item['text']);
+        if (app.friends.indexOf(item['username']) > -1) $text.addClass('friend');
         $message.append($user).append($text);
         $('#chats').append($message);
       }
-    })
+    });
+    $('.username').on('click', function() {
+     app.addFriend($(this).text());
+    });
   },
 
   clearMessages: function() {
@@ -123,8 +121,11 @@ var app = {
     $('#roomSelect').append($roomOption);
   },
 
-  addFriend: function() {
-
+  addFriend: function(friend) {
+    if (app.friends.indexOf(friend) === -1) {
+      app.friends.push(friend);
+      app.getMessages();
+    }
   }
 
 };
