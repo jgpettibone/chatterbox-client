@@ -1,33 +1,35 @@
 <!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <title>chatterbox</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel='stylesheet' href='styles/styles.css'>
 
     <!-- external javascript -->
-    <script src="bower_components/jquery/jquery.min.js"></script>
-    <script src="bower_components/underscore/underscore.js"></script>
+    <script src='bower_components/jquery/jquery.min.js'></script>
+    <script src='bower_components/underscore/underscore.js'></script>
     
     <!-- internal javascript -->
-    <script src="scripts/config.js"></script>
-    <script src="scripts/app.js"></script>
+    <script src='scripts/config.js'></script>
+    <script src='scripts/app.js'></script>
   </head>
 
   <body>
-    <div id="main" class="group">
+    <div id='main' class='group'>
       <h1>chatterbox</h1>
 
       <div id='rooms'>
-        Available Rooms:
-        <select id='roomSelect'></select>
+        <select id='roomSelect'>
+          <option value='All Rooms'>All Rooms</option>
+        </select>
+        <input type='text' name='room' id='roomText' value='New Room'/>
       </div>
 
       <div id='chats'>
         <form method='get'>
-          <input type="text" name="newMessage">
-          <input type="button" class="postMessage" value="Submit A Message">
-          <button type="button" class='getMessages'>Get New Messages!</button>
+          <input type='text' name='newMessage'>
+          <input type='button' class='postMessage' value='Submit A Message'>
+          <button type='button' class='getMessages'>Get New Messages!</button>
         </form>
       </div>
     </div>
