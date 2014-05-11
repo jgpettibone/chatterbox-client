@@ -8,6 +8,7 @@ var app = {
   roomname: 'lobby',
   friends: [],
   lastCreatedAt: '',
+  friendLength: 0,
 
   init: function() {
     app.username = window.location.search.substr(10);
@@ -35,13 +36,18 @@ var app = {
 
         // To prevent unneeded updates
         if (!data) return;
-        if (app.lastCreatedAt && data.results[data.results.length-1].createdAt === app.lastCreatedAt)
-          return;
+        if (app.lastCreatedAt && data.results[data.results.length-1].createdAt === app.lastCreatedAt){
+          if (app.friends.length === app.friendsLength)
+            return;
+          else 
+            app.friendsLength = app.friends.length;          
+        }
         else 
           app.lastCreatedAt = data.results[data.results.length-1].createdAt;
 
         app.getRooms(data.results);
         app.displayMessages(data);
+        console.log('updating');
       },
       error: function(data) {
         console.log('chatterbox: Failed to get messages');
