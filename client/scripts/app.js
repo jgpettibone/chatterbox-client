@@ -18,7 +18,7 @@ var app = {
       app.postMessage();
     });
     $('#roomSelect').on('change', function() {
-      app.getRoom();
+      app.changeRoom();
     });
   },
 
@@ -29,6 +29,7 @@ var app = {
       data: 'order=-createdAt',
       contentType: 'application/json',
       success: function(data) {
+        app.getRooms(data.results);
         app.displayMessages(data);
       },
       error: function(data) {
@@ -40,8 +41,7 @@ var app = {
   displayMessages: function(data) {
     app.clearMessages();
     _.each(data.results, function(item, index) {
-      if (!item['roomname']) item['roomname'] = 'lobby';
-      if (item['roomname'] === app.roomname) {
+      if (item['roomname'] === app.roomname || app.roomname === 'lobby') {
         var $message = $('<li></li>').addClass('message');
         var $user = $('<div></div>').addClass('user').text(item['username']);
         var $text = $('<div></div>').addClass('text').text(item['text']);
@@ -78,7 +78,24 @@ var app = {
     });
   },
 
-  getRoom: function() {
+  getRooms: function(results) {
+    $('#roomSelect').html('<option value="__newRoom">New room...</option><option value="" selected>Lobby</option></select>');
+
+    if (results) {
+      var rooms = {};
+      results.forEach(function(data){
+        var roomname = data.roomname;
+        if (roomname && !rooms[roomname]){
+          app.addRoom(roomname);
+          rooms[roomname];
+        }
+      });
+    }
+
+    $('#roomSelect').val(app.roomname);
+  },
+
+  changeRoom: function() {
     if ($('#roomSelect').prop('selectedIndex') === 0) {
       var roomname = prompt('Enter roomname');
       if (roomname) {
