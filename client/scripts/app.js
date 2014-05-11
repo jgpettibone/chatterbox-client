@@ -2,9 +2,11 @@
 // placing in app object
 var app = {
 
-  server: 'https://api.parse.com/1/classes/chatterbox' 
+  server: 'https://api.parse.com/1/classes/chatterbox',
+  username: 'anonymous',
 
   init: function() {
+    app.username = window.location.search.substr(10);
     app.getMessages();
     $('.getMessages').on('click', function() {
       app.getMessages();
@@ -37,20 +39,26 @@ var app = {
     })
   },
 
-  sendMessages: function() {
+  sendMessage: function() {
+
+    var message = {
+      username: app.username,
+      text: $('[name=newMessage').val()
+    }
+
     $.ajax({
       url: app.server,
       type: 'POST',
       data: JSON.stringify(message),
       contentType: 'application/json',
       success: function(data) {
-
+        app.getMessages();
+        $('[name=newMessage').val('');
       },
       error: function(data) {
         console.error('chatterbox: Failed to send message');
       }
     });
-  },
-
+  }
 
 };
