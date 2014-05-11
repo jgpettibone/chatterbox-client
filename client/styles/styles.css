@@ -85,3 +85,7 @@ button {
     font-size:13px;
     text-align:center;
 }
+
+.friend {
+    font-weight: bold;
+}
