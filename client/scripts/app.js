@@ -85,16 +85,15 @@ var app = {
     $('#roomSelect').html('<option value="__newRoom">New room...</option><option value="" selected>Lobby</option></select>');
 
     if (results) {
-      var rooms = {};
+      var rooms = [];
       results.forEach(function(data){
         var roomname = data.roomname;
-        if (roomname && !rooms[roomname]){
+        if (roomname && rooms.indexOf(roomname) === -1) {
           app.addRoom(roomname);
-          rooms[roomname];
+          rooms.push(roomname);
         }
       });
     }
-
     $('#roomSelect').val(app.roomname);
   },
 
