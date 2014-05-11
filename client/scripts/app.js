@@ -7,6 +7,7 @@ var app = {
   username: 'anonymous',
   roomname: 'lobby',
   friends: [],
+  lastCreatedAt: '',
 
   init: function() {
     app.username = window.location.search.substr(10);
@@ -31,6 +32,14 @@ var app = {
       data: 'order=-createdAt',
       contentType: 'application/json',
       success: function(data) {
+
+        // To prevent unneeded updates
+        if (!data) return;
+        if (app.lastCreatedAt && data.results[data.results.length-1].createdAt === app.lastCreatedAt)
+          return;
+        else 
+          app.lastCreatedAt = data.results[data.results.length-1].createdAt;
+
         app.getRooms(data.results);
         app.displayMessages(data);
       },
