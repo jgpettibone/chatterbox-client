@@ -2,6 +2,7 @@
 // placing in app object
 var app = {
 
+  // Initial Variables
   server: 'https://api.parse.com/1/classes/chatterbox',
   username: 'anonymous',
   roomname: 'lobby',
@@ -9,11 +10,12 @@ var app = {
   init: function() {
     app.username = window.location.search.substr(10);
     app.getMessages();
+    // Event Handlers
     $('.getMessages').on('click', function() {
       app.getMessages();
     });
-    $('.sendMessage').on('click', function() {
-      app.sendMessage();
+    $('.postMessage').on('click', function() {
+      app.postMessage();
     });
     $('#roomSelect').on('change', function() {
       app.getRoom();
@@ -50,7 +52,7 @@ var app = {
     $('.message').remove();
   },
 
-  sendMessage: function() {
+  postMessage: function() {
 
     var message = {
       username: app.username,
@@ -67,7 +69,7 @@ var app = {
         $('[name=newMessage').val('');
       },
       error: function(data) {
-        console.error('chatterbox: Failed to send message');
+        console.error('chatterbox: Failed to post message');
       }
     });
   }
