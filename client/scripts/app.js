@@ -11,6 +11,9 @@ var app = {
     $('.getMessages').on('click', function() {
       app.getMessages();
     });
+    $('.sendMessage').on('click', function() {
+      app.sendMessage();
+    });
   },
 
   getMessages: function() {
