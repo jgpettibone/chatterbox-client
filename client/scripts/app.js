@@ -15,6 +15,9 @@ var app = {
     $('.sendMessage').on('click', function() {
       app.sendMessage();
     });
+    $('#roomSelect').on('change', function() {
+      app.getRoom();
+    });
   },
 
   getMessages: function() {
@@ -33,7 +36,7 @@ var app = {
   },
 
   displayMessages: function(data) {
-    $('.message').remove();
+    app.clearMessages();
     _.each(data.results, function(item, index) {
       var $message = $('<li></li>').addClass('message');
       var $user = $('<div></div>').addClass('user').text(item['username']);
@@ -41,6 +44,10 @@ var app = {
       $message.append($user).append($text);
       $('#chats').append($message);
     })
+  },
+
+  clearMessages: function() {
+    $('.message').remove();
   },
 
   sendMessage: function() {
@@ -64,5 +71,6 @@ var app = {
       }
     });
   }
+
 
 };
