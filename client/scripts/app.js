@@ -40,11 +40,13 @@ var app = {
   displayMessages: function(data) {
     app.clearMessages();
     _.each(data.results, function(item, index) {
-      var $message = $('<li></li>').addClass('message');
-      var $user = $('<div></div>').addClass('user').text(item['username']);
-      var $text = $('<div></div>').addClass('text').text(item['text']);
-      $message.append($user).append($text);
-      $('#chats').append($message);
+      if (item['roomname'] === app.roomname) {
+        var $message = $('<li></li>').addClass('message');
+        var $user = $('<div></div>').addClass('user').text(item['username']);
+        var $text = $('<div></div>').addClass('text').text(item['text']);
+        $message.append($user).append($text);
+        $('#chats').append($message);
+      }
     })
   },
 
@@ -57,7 +59,7 @@ var app = {
     var message = {
       username: app.username,
       text: $('[name=newMessage').val(),
-      roomname: app.roomname
+      roomname: app.roomname || 'lobby'
     }
 
     $.ajax({
