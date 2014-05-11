@@ -19,18 +19,19 @@
       <h1>chatterbox</h1>
 
       <div id='rooms'>
+        <input type='text' name='room' id='roomText' placeholder='New Room'/>
+        <input type='button' class='addRoom' value='Create New Room'>
         <select id='roomSelect'>
-          <option value='All Rooms'>All Rooms</option>
+          <option value='Rooms'>Existing Rooms</option>
         </select>
-        <input type='text' name='room' id='roomText' value='New Room'/>
       </div>
 
       <div id='chats'>
         <form method='get'>
-          <input type='text' name='newMessage'>
-          <input type='button' class='postMessage' value='Submit A Message'>
-          <button type='button' class='getMessages'>Get New Messages!</button>
+          <input type='text' name='newMessage' placeholder='New Message'>
+          <input type='button' class='postMessage' value='Submit New Message'>
         </form>
+          <button type='button' class='getMessages'>Get Messages!</button>
       </div>
     </div>
     <script>
