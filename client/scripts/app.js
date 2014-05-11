@@ -40,6 +40,7 @@ var app = {
   displayMessages: function(data) {
     app.clearMessages();
     _.each(data.results, function(item, index) {
+      if (!item['roomname']) item['roomname'] = 'lobby';
       if (item['roomname'] === app.roomname) {
         var $message = $('<li></li>').addClass('message');
         var $user = $('<div></div>').addClass('user').text(item['username']);
@@ -75,6 +76,27 @@ var app = {
         console.error('chatterbox: Failed to post message');
       }
     });
+  },
+
+  getRoom: function() {
+    if ($('#roomSelect').prop('selectedIndex') === 0) {
+      var roomname = prompt('Enter roomname');
+      if (roomname) {
+        app.roomname = roomname;
+        app.addRoom(roomname);
+        $('#roomSelect').val(roomname);
+        app.getMessages();
+      }
+    }
+    else {
+      app.roomname = $('#roomSelect').val();
+      app.getMessages();
+    }
+  }, 
+
+  addRoom: function(roomname) {
+    var $roomOption = $('<option/>').val(roomname).text(roomname);
+    $('#roomSelect').append($roomOption);
   }
 
 };
